@@ -9,6 +9,12 @@ We will use the Torch package `gnuplot` for plotting; you may use (advanced: rec
 ## Materials
 See `simple_example.lua` for the example mentioned in the "Introduction" part of the writeup, and `practical3.lua` for the template for the primary task.
 
+We'll be classifying handwritten digits in a dataset called MNIST, which look like the following:
+
+![mnist](https://github.com/oxford-cs-ml-2015/practical3/raw/master/mnist.png)
+
+Each datapoint is a 32x32 image in the version of MNIST we have. The code provided will turn this into a vector containing all the raw pixel values. In `simple_example.lua`, there is a line containing the word "UNCOMMENT" illustrating how to view a digit from the train/test sets.
+
 # See course page for practicals
 <https://www.cs.ox.ac.uk/teaching/materials14-15/ml/>
 
