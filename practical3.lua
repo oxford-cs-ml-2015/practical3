@@ -201,12 +201,19 @@ for i = 1, iterations do
   if i % 10 == 0 then -- don't print *every* iteration, this is enough to get the gist
       print(string.format("minibatches processed: %6s, loss = %6.6f", i, minibatch_loss[1]))
   end
+  -- TIP: use this same idea of not saving the test loss in every iteration if you want to increase speed.
+  -- Then you can get, 10 (for example) times fewer values than the training loss. If you do this,
+  -- you just have to be careful to give the correct x-values to the plotting function, rather than
+  -- Tensor{1,2,...,#losses}. HINT: look up the torch.linspace function, and note that torch.range(1, #losses)
+  -- is the same as torch.linspace(1, #losses, #losses).
 
   losses[#losses + 1] = minibatch_loss[1] -- append the new loss
 end
 
--- Turn table of losses into a torch Tensor, and plot it
 -- TODO: for the first handin item, evaluate test loss above, and add to the plot below
+--       see TIP/HINT above if you want to make the optimization loop faster
+
+-- Turn table of losses into a torch Tensor, and plot it
 gnuplot.plot({
   torch.range(1, #losses),        -- x-coordinates for data to plot, creates a tensor holding {1,2,3,...,#losses}
   torch.Tensor(losses),           -- y-coordinates (the training losses)
