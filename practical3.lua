@@ -219,8 +219,6 @@ gnuplot.plot({
   torch.Tensor(losses),           -- y-coordinates (the training losses)
   '-'})
 
-print(string.format('%e',torch.min(torch.Tensor(losses), 1)))
-
 ------------------------------------------------------------------------------
 -- TESTING THE LEARNED MODEL: 2ND HANDIN ITEM
 ------------------------------------------------------------------------------
