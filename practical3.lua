@@ -1,5 +1,5 @@
 ---------------------------------------------------------------------------------------
--- Practical 3 - Learning to use different optimizers with logistic regression
+-- 실습 3 - 로지스틱 회귀로 다른 옵티마이저들을 사용하기 위한 학습
 --
 -- to run: th -i practical3.lua
 -- or:     luajit -i practical3.lua
@@ -13,7 +13,7 @@ require 'gnuplot'
 require 'dataset-mnist'
 
 ------------------------------------------------------------------------------
--- INITIALIZATION AND DATA
+-- 초기화 그리고 데이터
 ------------------------------------------------------------------------------
 
 torch.manualSeed(1)    -- fix random seed so program runs the same every time
