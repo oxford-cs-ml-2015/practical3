@@ -9,7 +9,7 @@
 ## Materials
 글의 "소개" 부분에서 언급된 예제를 위해 `simple_example.lua`를 보십시오. 그리고 이전 과제의 템플릿을 위해 `practical3.lua`를 보십시오.
 
-우리는 MNIST라 불리는 데이터세트에 있는 손으로 쓴 숫자들을 분류할 것입니다. 그 데이터들은 다음과 같습니다:
+우리는 MNIST라 불리는 데이터세트에 있는 손으로 쓴 숫자들을 분류할 것입니다. 그 데이터는 다음과 같습니다:
 
 ![mnist](https://github.com/oxford-cs-ml-2015/practical3/raw/master/mnist.png)
 
