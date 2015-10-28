@@ -13,7 +13,7 @@
 
 ![mnist](https://github.com/oxford-cs-ml-2015/practical3/raw/master/mnist.png)
 
-우리가 가진 MNIST 버전에서 각 데이터포인트는 32x32 영상입니다. 제공된 코드는 이것을 전체가 raw 픽셀 값들로 구성된 한 벡터로 바꿀 것입니다. `simple_example.lua`에는, 훈련/시험 세트들에서 어떻게 한 숫자를 보여주는지를 그림으로 보여주는 "UNCOMMENT(주석 해제)"라 쓰인 줄이 하나 있습니다. 
+우리가 가진 MNIST 버전에서 각 데이터포인트는 32x32 영상입니다. 제공된 코드는 이것을 raw 픽셀 값들로 구성된 벡터 하나로 바꿀 것입니다. `simple_example.lua`에는, 훈련/시험 세트들에서 어떻게 한 숫자를 보여주는지를 그림으로 보여주는 "UNCOMMENT(주석 해제)"라 쓰인 줄이 하나 있습니다. 
 
 # 이 실습들을 위한 코스 페이지를 보십시오.
 <https://www.cs.ox.ac.uk/people/nando.defreitas/machinelearning/>
