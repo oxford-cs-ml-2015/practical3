@@ -29,7 +29,7 @@ local function feval(x_vec)
     return f, grad
 end
 
--- 여기서 알고리즘이 시작합니다 (보통은 랜덤이지만, 이것은 데모이므로 우리는 그렇게 하지 않을 것입니다)
+-- 어디에서 알고리즘이 시작할지 (보통은 랜덤이지만, 이것은 데모이므로 우리는 그렇게 하지 않을 것입니다)
 -- 노트: 점들을 위한 플롯(plot)을 사용하여, 적은 수의 시작 점들로 시도해보십시오.
 local x = torch.Tensor{5}
 
@@ -39,7 +39,7 @@ local state = { learningRate = 1e-2 }
 -- 반복 횟수가 너무 많아지거나 미분값이 0에 가까워지면 멈춥니다.
 local iter = 0
 while true do
-    -- optim는 adagrad, sgd, lbfgs 등과 같은 여러 함수들을 가집니다.
+    -- optim은 adagrad, sgd, lbfgs 등과 같은 여러 함수들을 가집니다.
     -- 더 자세한 사항은 문서를 보십시오.
     optim.adagrad(feval, x, state)
 
