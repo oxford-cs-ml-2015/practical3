@@ -202,11 +202,11 @@ for i = 1, iterations do
   if i % 10 == 0 then --  *매* iteration을 print하지 마십시오, 이것으로도 요지를 파악하는 데 충분합니다.
       print(string.format("minibatches processed: %6s, loss = %6.6f", i, minibatch_loss[1]))
   end
-  -- 팁: use this same idea of not saving the test loss in every iteration if you want to increase speed.
-  -- Then you can get, 10 (for example) times fewer values than the training loss. If you do this,
-  -- you just have to be careful to give the correct x-values to the plotting function, rather than
-  -- Tensor{1,2,...,#losses}. HINT: look up the torch.linspace function, and note that torch.range(1, #losses)
-  -- is the same as torch.linspace(1, #losses, #losses).
+  -- 팁: 만약 속도를 높이고 싶다면, 매 iteration에서 시험 손실을 저장하기 않는 방법을 써보십시오.
+  -- 그러면 (이를테면) 훈련 손실보다 10배 적은 값들을 얻을 수 있습니다. 만약 이것을 한다면,
+  -- 우리는 plot하는 함수에 Tensor{1,2,...,#losses}보다는, 올바른 x 값들을 전하기 위해 조심해야만 합니다. 
+  -- 힌트: torch.linspace 함수를 보십시오, 그리고 torch.range(1, #losses)가
+  --       torch.linspace(1, #losses, #losses)와 같음에 유념하십시오.
 
   losses[#losses + 1] = minibatch_loss[1] -- 그 새 손실을 덧붙입니다
 end
