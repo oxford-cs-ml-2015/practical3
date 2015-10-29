@@ -188,45 +188,46 @@ for i = 1, iterations do
   -- optimMethod는 함수를 저장하는 변수입니다, 그 변수는 optim.sgd 또는 optim.adagrad 또는 ...입니다.
   -- 이 함수들이 무엇을 하고 리턴하는지에 대한 더 자세한 정보는 다음 문서를 보십시오:
   --   https://github.com/torch/optim
-  -- it returns (new_parameters, table), where table[0] is the value of the function being optimized
-  -- and we can ignore new_parameters because `parameters` is updated in-place every time we call 
-  -- the optim module's function. It uses optimState to hide away its bookkeeping that it needs to do
-  -- between iterations.
+  -- 그것은 (new_parameters, table)을 리턴합니다, 여기서 table[0] 최적화하는 함수의 값입니다.
+  -- 그리고 우리는 new_parameters를 무시할 수 있습니다, 왜냐하면 `parameters`는 우리가 optim 모듈의 
+  -- 함수를 호출할 때마다 매 번 제자리에서 갱신되기 때문입니다.
+  -- 그것은 optimState를 사용합니다, iteration들 사이에 그것이 해야하는 그것의 *부기*를 감추기 위해.
+  -- (*부기*: <경제> 자산, 자본, 부채의 수지, 증감 따위를 밝히는 장부를 적는 방법).
   local _, minibatch_loss = optimMethod(feval, parameters, optimState)
 
-  -- Our loss function is cross-entropy, divided by the number of data points,
-  -- therefore the units (units in the physics sense) of the loss is "loss per data sample".
-  -- Since we evaluate the loss on a different minibatch each time, the loss will sometimes 
-  -- fluctuate upwards slightly (i.e. the loss estimate is noisy).
-  if i % 10 == 0 then -- don't print *every* iteration, this is enough to get the gist
+  -- 우리의 손실 함수는 데이터 포인트들의 개수로 나눠진 크로스-엔트로피입니다,
+  -- 그러므로 그 손실의 유닛들(물리적 감각에서의 유닛들)은 "데이터 샘플 당 손실"입니다.
+  -- 우리가 매 번 다른 미니배치에서 손실을 평가하므로, 그 손실은 때때로
+  -- 위쪽으로 살짝 요동칠 것입니다 (다시 말해, 그 손실 추정에는 잡음이 끼어 있을 것입니다).
+  if i % 10 == 0 then --  *매* iteration을 print하지 마십시오, 이것으로도 요지를 파악하는 데 충분합니다.
       print(string.format("minibatches processed: %6s, loss = %6.6f", i, minibatch_loss[1]))
   end
-  -- TIP: use this same idea of not saving the test loss in every iteration if you want to increase speed.
+  -- 팁: use this same idea of not saving the test loss in every iteration if you want to increase speed.
   -- Then you can get, 10 (for example) times fewer values than the training loss. If you do this,
   -- you just have to be careful to give the correct x-values to the plotting function, rather than
   -- Tensor{1,2,...,#losses}. HINT: look up the torch.linspace function, and note that torch.range(1, #losses)
   -- is the same as torch.linspace(1, #losses, #losses).
 
-  losses[#losses + 1] = minibatch_loss[1] -- append the new loss
+  losses[#losses + 1] = minibatch_loss[1] -- 그 새 손실을 덧붙입니다
 end
 
--- TODO: for the first handin item, evaluate test loss above, and add to the plot below
---       see TIP/HINT above if you want to make the optimization loop faster
+-- 할 일(TODO): 첫 번째 제출 항목을 위해, 위의 시험 손실을 평가하십시오, 그리고 그 아래 그림에 추가하십시오.
+--              만약 최적화 루프는 더 빠르게 만들고 싶다면, 위의 팁/힌트를 보십시오 
 
--- Turn table of losses into a torch Tensor, and plot it
+-- 손실들의 테이블을 한 토치 텐서 바꿈, 그리고 그것을 그림
 gnuplot.plot({
-  torch.range(1, #losses),        -- x-coordinates for data to plot, creates a tensor holding {1,2,3,...,#losses}
-  torch.Tensor(losses),           -- y-coordinates (the training losses)
+  torch.range(1, #losses),        -- 그릴 데이터를 위한 x-좌표, {1,2,3,...,#losses}을 가진 한 텐서를 생성
+  torch.Tensor(losses),           -- y-좌표 (훈련 손실들)
   '-'})
 
 ------------------------------------------------------------------------------
--- TESTING THE LEARNED MODEL: 2ND HANDIN ITEM
+-- 그 학습된 모델을 시험: 두 번째 제출 항목
 ------------------------------------------------------------------------------
 
 local logProbs = model:forward(test.data)
 local classProbabilities = torch.exp(logProbs)
 local _, classPredictions = torch.max(classProbabilities, 2)
--- classPredictions holds predicted classes from 1-10
+-- classPredictions은 1~10까지의 예측된 부류들을 가집니다.
 
--- TODO: compute test classification error here for the second handin item
+-- 할 일(TODO): 두 번째 제출 항목을 위한 여기서의 시험 분류 오차를 계산하십시오.
 
