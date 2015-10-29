@@ -1,8 +1,8 @@
 ---------------------------------------------------------------------------------------
--- 실습 3 - 로지스틱 회귀로 다른 옵티마이저들을 사용하기 위한 학습
+-- 실습 3 - 로지스틱 회귀로 다른 최적화기를 사용하기 위한 학습
 --
--- to run: th -i practical3.lua
--- or:     luajit -i practical3.lua
+-- 실행 방법: th -i practical3.lua
+-- 또는:      luajit -i practical3.lua
 ---------------------------------------------------------------------------------------
 
 require 'torch'
@@ -16,21 +16,21 @@ require 'dataset-mnist'
 -- 초기화 그리고 데이터
 ------------------------------------------------------------------------------
 
-torch.manualSeed(1)    -- fix random seed so program runs the same every time
+torch.manualSeed(1)    -- 프로그램이 매번 같게 실행되도록 랜덤 시드를 고정합니다.
 
--- TODO: play with these optimizer options for the second handin item, as described in the writeup
--- NOTE: see below for optimState, storing optimiser settings
-local opt = {}         -- these options are used throughout
+-- 할 일(TODO): 이 최적화기 옵션들을 가지고 노십시오. 문서에 설명되어 있는 두 번째 제출 숙제임.
+-- 노트: 최적화기 설정들을 저장하는 optimState를 위해 아래를 보십시오.
+local opt = {}         -- 이 옵션들은 도처에 사용됩니다.
 opt.optimization = 'sgd'
 opt.batch_size = 3
-opt.train_size = 8000  -- set to 0 or 60000 to use all 60000 training data
-opt.test_size = 0      -- 0 means load all data
-opt.epochs = 2         -- **approximate** number of passes through the training data (see below for the `iterations` variable, which is calculated from this)
+opt.train_size = 8000  -- 0 또는 60000으로 설정, 모든 60000개 훈련 데이털르 사용하기 위해
+opt.test_size = 0      -- 0은 모든 데이터를 로드함을 의미합니다.
+opt.epochs = 2         -- 훈련 데이터 전체를 한 번씩 읽어 처리하는 **근사적** 횟수, (`반복(iterations)` 변수를 위해 아래를 보십시오, 그 변수가 이 값으로 계산됩니다)
 
--- NOTE: the code below changes the optimization algorithm used, and its settings
-local optimState       -- stores a lua table with the optimization algorithm's settings, and state during iterations
-local optimMethod      -- stores a function corresponding to the optimization routine
--- remember, the defaults below are not necessarily good
+-- 노트: 아래 코드는 사용되는 최적화 알고리즘과 그 설정들을 바꿉니다
+local optimState       -- 최적화 알고리즘의 설정들과 iteration들 동안의 상태을 가진 루아 테이블 하나를 저장
+local optimMethod      -- 그 최적화 루틴에 상응하는 함수 하나를 저장
+-- 기억하십시오, 아래 기본값들이 꼭 좋은 것은 아닙니다.
 if opt.optimization == 'lbfgs' then
   optimState = {
     learningRate = 1e-1,
@@ -55,11 +55,11 @@ else
   error('Unknown optimizer')
 end
 
-mnist.download()       -- download dataset if not already there
+mnist.download()       -- 만약 없다면, 데이터세트를 내려받습니다.
 
--- load dataset using dataset-mnist.lua into tensors (first dim of data/labels ranges over data)
+-- dataset-mnist.lua를 사용하여 데이터세트를 텐서들로 로드합니다 (데이터의 첫 차원/데이터에 대한 정답(labels)들)
 local function load_dataset(train_or_test, count)
-    -- load
+    -- 로드
     local data
     if train_or_test == 'train' then
         data = mnist.loadTrainSet(count, {32, 32})
@@ -67,18 +67,18 @@ local function load_dataset(train_or_test, count)
         data = mnist.loadTestSet(count, {32, 32})
     end
 
-    -- shuffle the dataset
+    -- 데이터세트 섞기
     local shuffled_indices = torch.randperm(data.data:size(1)):long()
-    -- creates a shuffled *copy*, with a new storage
+    -- 새 스토리지를 가진 섞인 *복사본* 생성 
     data.data = data.data:index(1, shuffled_indices):squeeze()
     data.labels = data.labels:index(1, shuffled_indices):squeeze()
 
-    -- TODO: (optional) UNCOMMENT to display a training example
-    -- for more, see torch gnuplot package documentation:
+    -- 할 일(TODO): (선택적) 훈련 예제를 디스플레이하기 위해 주석 해제(UNCOMMENT)하십시오.
+    -- 더 자세한 사항은 torch gnuplot 패키지 문서를 보십시오:
     -- https://github.com/torch/gnuplot#plotting-package-manual-with-gnuplot
     --gnuplot.imagesc(data.data[10])
 
-    -- vectorize each 2D data point into 1D
+    -- 각 2차원 데이터 포인트를 1차원으로 벡터화합니다.
     data.data = data.data:reshape(data.data:size(1), 32*32)
 
     print('--------------------------------')
@@ -94,12 +94,12 @@ local train = load_dataset('train', opt.train_size)
 local test = load_dataset('test', opt.test_size)
 
 ------------------------------------------------------------------------------
--- MODEL
+-- 모델
 ------------------------------------------------------------------------------
 
-local n_train_data = train.data:size(1) -- number of training data
-local n_inputs = train.data:size(2)     -- number of cols = number of dims of input
-local n_outputs = train.labels:max()    -- highest label = # of classes
+local n_train_data = train.data:size(1) -- 훈련 데이터 개수
+local n_inputs = train.data:size(2)     -- 열의 개수 = 입력의 차원들의 개수
+local n_outputs = train.labels:max()    -- 가장 높은 레이블 = 부류들의 개수
 
 print(train.labels:max())
 print(train.labels:min())
@@ -111,19 +111,19 @@ model:add(lin_layer)
 model:add(softmax)
 
 ------------------------------------------------------------------------------
--- LOSS FUNCTION
+-- 손실 함수
 ------------------------------------------------------------------------------
 
 local criterion = nn.ClassNLLCriterion()
 
 ------------------------------------------------------------------------------
--- TRAINING
+-- 훈련
 ------------------------------------------------------------------------------
 
 local parameters, gradParameters = model:getParameters()
 
 ------------------------------------------------------------------------
--- Define closure with mini-batches 
+-- 미니 배치를 가진 클로저(함수 안에 정의된 함수) 정의
 ------------------------------------------------------------------------
 
 local counter = 0
@@ -132,16 +132,16 @@ local feval = function(x)
     parameters:copy(x)
   end
 
-  -- get start/end indices for our minibatch (in this code we'll call a minibatch a "batch")
+  -- 우리의 미니배치를 위한 시작 또는 끝 인덱스들을 얻습니다 (이 코드에서 우리는 미니배치를 "배치"라 부를 것입니다)
   --           ------- 
   --          |  ...  |
   --        ^ ---------<- start index = i * batchsize + 1
   --  batch | |       |
   --   size | | batch |       
-  --        v |   i   |<- end index (inclusive) = start index + batchsize
-  --          ---------                         = (i + 1) * batchsize + 1
-  --          |  ...  |                 (except possibly for the last minibatch, we can't 
-  --          --------                   let that one go past the end of the data, so we take a min())
+  --        v |   i   |<- end index (마지막 인덱스도 포함) = start index + batchsize
+  --          ---------                                    = (i + 1) * batchsize + 1
+  --          |  ...  |                 (마지막 미니배치를 제외하고, 데이터 범위를 넘어서 
+  --          --------                   접근하기 못하도록, min()을 취합니다)
   local start_index = counter * opt.batch_size + 1
   local end_index = math.min(n_train_data, (counter + 1) * opt.batch_size + 1)
   if end_index == n_train_data then
@@ -154,39 +154,39 @@ local feval = function(x)
   local batch_targets = train.labels[{{start_index, end_index}}]
   gradParameters:zero()
 
-  -- In order, these lines compute:
-  -- 1. compute outputs (log probabilities) for each data point
+  -- 순서대로, 이 줄들은 계산합니다:
+  -- 1. 각 데이터 포인트를 위한 출력 (로그 확률) 계산
   local batch_outputs = model:forward(batch_inputs)
-  -- 2. compute the loss of these outputs, measured against the true labels in batch_target
+  -- 2. 이 출력들의 손실 계산, barch_target에 있는 정답과 대조하여 측정된
   local batch_loss = criterion:forward(batch_outputs, batch_targets)
-  -- 3. compute the derivative of the loss wrt the outputs of the model
+  -- 3. 그 모델의 출력들에 대한 편미분 계산
   local dloss_doutput = criterion:backward(batch_outputs, batch_targets) 
-  -- 4. use gradients to update weights, we'll understand this step more next week
+  -- 4. 가중치들을 갱신하기 위해 기울기들을 사용, 우리는 다음 주에 이 단계를 더 깊게 이해할 것입니다.
   model:backward(batch_inputs, dloss_doutput)
 
-  -- optim expects us to return
-  --     loss, (gradient of loss with respect to the weights that we're optimizing)
+  -- optim은 우리에게 다음을 리턴하길 기대합니다
+  --     손실, (우리가 최적화하고 있는 가중치들에 대한 손실의 기울기)
   return batch_loss, gradParameters
 end
   
 ------------------------------------------------------------------------
--- OPTIMIZE: FIRST HANDIN ITEM
+-- 최적화: 첫 번째 제출 항목
 ------------------------------------------------------------------------
-local losses = {}          -- training losses for each iteration/minibatch
-local epochs = opt.epochs  -- number of full passes over all the training data
-local iterations = epochs * math.ceil(n_train_data / opt.batch_size) -- integer number of minibatches to process
--- (note: number of training data might not be divisible by the batch size, so we round up)
+local losses = {}          -- 각 iteration/미니배치를 위한 훈련 손실들
+local epochs = opt.epochs  -- 에포크 횟수
+local iterations = epochs * math.ceil(n_train_data / opt.batch_size) -- 처리할 미니배치들의 정수 숫자
+-- (노트: 훈련 데이터의 수는 배치 크기로 나눌 수 없을 수도 있습니다, 그래서 우리는 올림 합니다)
 
--- In each iteration, we:
---    1. call the optimization routine, which
---      a. calls feval(parameters), which
---          i. grabs the next minibatch
---         ii. returns the loss value and the gradient of the loss wrt the parameters, evaluated on the minibatch
---      b. the optimization routine uses this gradient to adjust the parameters so as to reduce the loss.
---    3. then we append the loss to a table (list) and print it
+-- 각 iteration에서, 우리는:
+--    1. 그 최적화 루틴을 호출합니다, 그 루틴은
+--      a. feval(parameters)을 호출합니다, 그 feval은
+--          i. 다음 미니배치를 집습니다
+--         ii. 그 미니배치에서 평가된 파라미터들에 대한 손실의 기울기와 손실 값을 리턴합니다.
+--      b. 손실을 줄이기 위해, 그 최적화 루틴은 이 기울기를 그 파라미터를 조절하는 데 사용합니다.
+--    2. 그리고 우리는 그 손실을 한 테이블(리스트)에 덧붙이고, 그것을 출력합니다.
 for i = 1, iterations do
-  -- optimMethod is a variable storing a function, either optim.sgd or optim.adagrad or ...
-  -- see documentation for more information on what these functions do and return:
+  -- optimMethod는 함수를 저장하는 변수입니다, 그 변수는 optim.sgd 또는 optim.adagrad 또는 ...입니다.
+  -- 이 함수들이 무엇을 하고 리턴하는지에 대한 더 자세한 정보는 다음 문서를 보십시오:
   --   https://github.com/torch/optim
   -- it returns (new_parameters, table), where table[0] is the value of the function being optimized
   -- and we can ignore new_parameters because `parameters` is updated in-place every time we call 
