@@ -23,7 +23,7 @@ torch.manualSeed(1)    -- 프로그램이 매번 같게 실행되도록 랜덤 �
 local opt = {}         -- 이 옵션들은 도처에 사용됩니다.
 opt.optimization = 'sgd'
 opt.batch_size = 3
-opt.train_size = 8000  -- 0 또는 60000으로 설정, 모든 60000개 훈련 데이털르 사용하기 위해
+opt.train_size = 8000  -- 0 또는 60000으로 설정, 모든 60000개 훈련 데이터를 사용하기 위해
 opt.test_size = 0      -- 0은 모든 데이터를 로드함을 의미합니다.
 opt.epochs = 2         -- 훈련 데이터 전체를 한 번씩 읽어 처리하는 **근사적** 횟수, (`반복(iterations)` 변수를 위해 아래를 보십시오, 그 변수가 이 값으로 계산됩니다)
 
