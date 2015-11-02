@@ -190,7 +190,7 @@ for i = 1, iterations do
   --   https://github.com/torch/optim
   -- 그것은 (new_parameters, table)을 리턴합니다, 여기서 table[0] 최적화하는 함수의 값입니다.
   -- 그리고 우리는 new_parameters를 무시할 수 있습니다, 왜냐하면 `parameters`는 우리가 optim 모듈의 
-  -- 함수를 호출할 때마다 매 번 제자리에서 갱신되기 때문입니다.
+  -- 함수를 호출할 때마다 매번 제자리에서 갱신되기 때문입니다.
   -- 그것은 optimState를 사용합니다, iteration들 사이에 그것이 해야하는 그것의 *부기*를 감추기 위해.
   -- (*부기*: <경제> 자산, 자본, 부채의 수지, 증감 따위를 밝히는 장부를 적는 방법).
   local _, minibatch_loss = optimMethod(feval, parameters, optimState)
