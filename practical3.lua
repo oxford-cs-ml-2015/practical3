@@ -165,7 +165,7 @@ local feval = function(x)
   model:backward(batch_inputs, dloss_doutput)
 
   -- optim은 우리에게 다음을 리턴하길 기대합니다
-  --     손실, (우리가 최적화하고 있는 가중치들에 대한 손실의 기울기)
+  -- 손실, (우리가 최적화하고 있는 가중치들에 대한 손실의 기울기)
   return batch_loss, gradParameters
 end
   
