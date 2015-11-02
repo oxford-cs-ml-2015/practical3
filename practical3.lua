@@ -55,7 +55,7 @@ else
   error('Unknown optimizer')
 end
 
-mnist.download()       -- 만약 없다면, 데이터세트를 내려받습니다.
+mnist.download()  -- 만약 데이터세트가 없다면, 데이터세트를 새로 내려받습니다.
 
 -- dataset-mnist.lua를 사용하여 데이터세트를 텐서들로 로드합니다 (데이터의 첫 차원/데이터에 대한 정답(labels)들)
 local function load_dataset(train_or_test, count)
