@@ -154,7 +154,7 @@ local feval = function(x)
   local batch_targets = train.labels[{{start_index, end_index}}]
   gradParameters:zero()
 
-  -- 순서대로, 이 줄들은 계산합니다:
+  -- 순서대로, 이 줄들은 다음을 계산합니다:
   -- 1. 각 데이터 포인트를 위한 출력 (로그 확률) 계산
   local batch_outputs = model:forward(batch_inputs)
   -- 2. 이 출력들의 손실 계산, barch_target에 있는 정답과 대조하여 측정된
