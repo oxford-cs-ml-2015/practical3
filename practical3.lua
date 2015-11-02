@@ -185,21 +185,20 @@ local iterations = epochs * math.ceil(n_train_data / opt.batch_size) -- 처리�
 --      b. 손실을 줄이기 위해, 그 최적화 루틴은 이 기울기를 그 파라미터를 조절하는 데 사용합니다.
 --    2. 그리고 우리는 그 손실을 한 테이블(리스트)에 덧붙이고, 그것을 출력합니다.
 for i = 1, iterations do
-  -- optimMethod는 함수를 저장하는 변수입니다, 그 변수는 optim.sgd 또는 optim.adagrad 또는 ...입니다.
-  -- 이 함수들이 무엇을 하고 리턴하는지에 대한 더 자세한 정보는 다음 문서를 보십시오:
-  --   https://github.com/torch/optim
-  -- 그것은 (new_parameters, table)을 리턴합니다, 여기서 table[0] 최적화하는 함수의 값입니다.
-  -- 그리고 우리는 new_parameters를 무시할 수 있습니다, 왜냐하면 `parameters`는 우리가 optim 모듈의 
+  -- optimMethod는 함수를 저장하는 변수입니다, 그 변수는 optim.sgd, optim.adagrad 등입니다.
+  -- 이 함수들이 무슨 일을 하고 무엇을 리턴하는지에 대한 더 자세한 정보는 다음 문서를 보십시오:
+  --   https://github.com/torch/optim (또는 한국어, https://github.com/LeeTaewoo/optim)
+  -- optimMethod는 (new_parameters, table)을 리턴합니다, 여기서 table[0] 최적화하는 함수의 값입니다.
+  -- 우리는 new_parameters를 무시할 수 있습니다, 왜냐하면 `parameters`는 우리가 optim 모듈의 
   -- 함수를 호출할 때마다 매번 제자리에서 갱신되기 때문입니다.
-  -- 그것은 optimState를 사용합니다, iteration들 사이에 그것이 해야하는 그것의 *부기*를 감추기 위해.
-  -- (*부기*: <경제> 자산, 자본, 부채의 수지, 증감 따위를 밝히는 장부를 적는 방법).
+  -- optimMethod는 iteration들 사이에 해야하는 상태 변화 기록을 감추기 위해 optimState를 사용합니다.
   local _, minibatch_loss = optimMethod(feval, parameters, optimState)
 
-  -- 우리의 손실 함수는 데이터 포인트들의 개수로 나눠진 크로스-엔트로피입니다,
-  -- 그러므로 그 손실의 유닛들(물리적 감각에서의 유닛들)은 "데이터 샘플 당 손실"입니다.
-  -- 우리가 매 번 다른 미니배치에서 손실을 평가하므로, 그 손실은 때때로
+  -- 우리의 손실 함수는 데이터 포인트들의 개수로 나눠진 크로스-엔트로피입니다.
+  -- 그러므로 그 손실의 단위(물리적 감각에서의 단위)는 "데이터 샘플 당 손실"입니다.
+  -- 우리가 매번 다른 미니배치에서 손실을 평가하므로, 그 손실은 때때로
   -- 위쪽으로 살짝 요동칠 것입니다 (다시 말해, 그 손실 추정에는 잡음이 끼어 있을 것입니다).
-  if i % 10 == 0 then --  *매* iteration을 print하지 마십시오, 이것으로도 요지를 파악하는 데 충분합니다.
+  if i % 10 == 0 then --  *매* iteration을 출력하지 마십시오, 이것만으로도 요지를 파악하는 데 충분합니다.
       print(string.format("minibatches processed: %6s, loss = %6.6f", i, minibatch_loss[1]))
   end
   -- 팁: 만약 속도를 높이고 싶다면, 매 iteration에서 시험 손실을 저장하기 않는 방법을 써보십시오.
