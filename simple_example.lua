@@ -1,3 +1,5 @@
+print ("Even more cats")
+
 require 'torch'
 require 'optim'
 
@@ -19,7 +21,7 @@ local grad = torch.Tensor{0}
 
 -- return function's value and the gradient, at a given point x_vec
 local function feval(x_vec)
-    -- note: x_vec is a Tensor of 1-dim and size 1, so 
+    -- note: x_vec is a Tensor of 1-dim and size 1, so
     -- we get its one and only element:
     local x = x_vec[1]
 
@@ -45,12 +47,10 @@ while true do
 
     -- gradient norm is SOMETIMES a good measure of how close we are to the optimum, but often not.
     -- the issue is that we'd stop at points like x=0 for x^3
-    if grad:norm() < 0.005 or iter > 50000 then 
-        break 
+    if grad:norm() < 0.005 or iter > 50000 then
+        break
     end
     iter = iter + 1
 end
 
 print(string.format("%.6f", x[1]))
-
-
