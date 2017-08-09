@@ -139,11 +139,11 @@ local feval = function(x)
   --  batch | |       |
   --   size | | batch |       
   --        v |   i   |<- end index (inclusive) = start index + batchsize
-  --          ---------                         = (i + 1) * batchsize + 1
+  --          ---------                         = (i + 1) * batchsize
   --          |  ...  |                 (except possibly for the last minibatch, we can't 
   --          --------                   let that one go past the end of the data, so we take a min())
   local start_index = counter * opt.batch_size + 1
-  local end_index = math.min(n_train_data, (counter + 1) * opt.batch_size + 1)
+  local end_index = math.min(n_train_data, (counter + 1) * opt.batch_size)
   if end_index == n_train_data then
     counter = 0
   else
